@@ -60,11 +60,11 @@ void process_image_callback(const sensor_msgs::Image img)
   int white_pixel = 255;
   bool white_pixel_exist = false;
   int direction_definer=0;
-  for (int i = 0; i < img.height * img.step; i++) {
-        if (img.data[i] - white_pixel == 0) {
-            white_pixel_exist = true;
-	    direction_definer=i % img.step;
-            break;
+  for (int i = 0; i < img.height * img.width * 3 ; i++) {
+        if (img.data[i] - white_pixel == 0 & img.data[i+1] - white_pixel == 0 & img.data[i+2] - white_pixel == 0) {
+          		  white_pixel_exist = true;
+	  		  direction_definer=i % img.step;
+          		  break;
         }
     }
 
