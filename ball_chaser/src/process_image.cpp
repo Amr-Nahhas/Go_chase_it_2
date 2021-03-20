@@ -17,18 +17,6 @@ void move_robot_forward()
         ROS_ERROR("Failed to call service forward_move");
 }
 
-void stop_robot()
-{
-    ROS_INFO_STREAM("stop robot");
-
-    ball_chaser::DriveToTarget srv;
-    srv.request.linear_x  = 0;
-    srv.request.angular_z  = 0;
-
-    if (!client.call(srv))
-        ROS_ERROR("Failed to call service forward_move");
-}
-
 void move_robot_right()
 {
     ROS_INFO_STREAM("Moving robot right");
@@ -54,6 +42,17 @@ void move_robot_left()
         ROS_ERROR("Failed to call service forward_move");
 }
 
+void stop_robot()
+{
+    ROS_INFO_STREAM("Stopping Robot");
+
+    ball_chaser::DriveToTarget srv;
+    srv.request.linear_x  = 0;
+    srv.request.angular_z  = 0;
+
+    if (!client.call(srv))
+        ROS_ERROR("Failed to call service forward_move");
+}
 
 void process_image_callback(const sensor_msgs::Image img)
 {
@@ -65,7 +64,8 @@ void process_image_callback(const sensor_msgs::Image img)
           		  white_pixel_exist = true;
 	  		  direction_definer=i % img.step;
           		  break;
-        }
+	}
+	
     }
 
   if (white_pixel_exist == true){
@@ -74,8 +74,11 @@ void process_image_callback(const sensor_msgs::Image img)
 	else if (direction_definer >= img.step /3 && direction_definer <= 2 * (img.step / 3)){
 	move_robot_forward();}
 	else{
-	move_robot_right();}
-    }
+	move_robot_right();
+	}
+  }
+  else  { stop_robot();
+        }
 }
 
 int main(int argc, char** argv)
